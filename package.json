@@ -1,7 +1,7 @@
 {
   "name": "aufbau-files",
   "version": "0.1.0",
-  "description": "A simple aufbau app for letting people download files.",
+  "description": "A simple aufbau app for downloading files.",
   "main": "index.js",
   "scripts": {
     "build": "gulp",
