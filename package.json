@@ -1,0 +1,23 @@
+{
+  "name": "aufbau-files",
+  "version": "0.1.0",
+  "description": "A simple aufbau app for letting people download files.",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp",
+    "dev": "gulp watch-files",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Michael Keller",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "^3.5.6",
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-plumber": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-stylus": "^2.0.5",
+    "indian-ocean": "^0.4.0",
+    "nib": "^1.1.0"
+  }
+}

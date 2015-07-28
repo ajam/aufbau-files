@@ -1,0 +1,66 @@
+html,
+body 
+  padding 0
+  margin 0
+
+html
+  font-size 16px
+
+body
+  font-size 62.5%
+  font-family 'Helvetica Neue', Helvetica, sans-serif
+
+header 
+  width 100%
+  text-align center
+  padding 10px 0
+
+header h1 
+  font-weight 100
+  font-size 3.5em
+  margin 10px 0 0 0
+  padding 0
+
+#main
+  padding 15px 25px 25px 25px
+  text-align center
+  width 75%
+  margin 0 auto
+  overflow auto
+
+.file-group
+  position relative
+  width 140px
+  height 160px
+  display inline-block
+  margin 0 auto
+  padding 12px 10px 12px 0
+
+.file-group:hover
+  cursor pointer
+
+.file-group:hover .file-icon
+  background-color #DDD
+
+.file-icon
+  width 100%
+  height 140px
+  background-size contain
+  background-repeat no-repeat
+  border-radius 8px
+  background-image url('./icons/default.png')
+  &[data-icon="docx"],
+  &[data-icon="doc"]
+    background-image url('./icons/docx.png')
+  &[data-icon="xlsx"],
+  &[data-icon="xls"]
+    background-image url('./icons/xlsx.png')
+
+.file-name
+  position absolute
+  width 100%
+  text-align center
+  padding 5px 0
+  font-size 1.4em
+  bottom -2px
+  transform translateX(-5px)
