@@ -23,3 +23,4 @@ Then the following to your `apps.json`. If you've changed the name of the repo, 
 	"buildCmd": "npm run build"
 }
 ````
+
