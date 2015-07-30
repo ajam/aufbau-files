@@ -15,9 +15,12 @@ Then the following to your `apps.json`. If you've changed the name of the repo, 
 
 ````json
 {
-  "displayName": "Files",
-  "packageName": "aufbau-files",
-  "indexPath": "src/index.html",
-  "buildCmd": "npm run build"
+	"displayName": "Files",
+	"package": {
+      "aufbau-files": "mhkeller/aufbau-files"
+    },
+	"indexPath": "src/index.html",
+	"buildCmd": "npm run build"
 }
 ````
+
