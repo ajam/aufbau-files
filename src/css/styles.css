@@ -5,15 +5,19 @@ body {
 }
 html {
   font-size: 16px;
+  background-color: #f3f0df;
 }
 body {
   font-size: 62.5%;
-  font-family: 'Helvetica Neue', Helvetica, sans-serif;
+  font-family: Helvetica, sans-serif;
 }
 header {
   width: 100%;
   text-align: center;
   padding: 10px 0;
+  background-color: #394d4d;
+  color: #9babab;
+  text-shadow: 0 0 1px #0d0d0d;
 }
 header h1 {
   font-weight: 100;
@@ -40,7 +44,7 @@ header h1 {
   cursor: pointer;
 }
 .file-group:hover .file-icon {
-  background-color: #ddd;
+  background-color: #c7c2a6;
 }
 .file-icon {
   width: 100%;
@@ -53,6 +57,9 @@ header h1 {
 .file-icon[data-icon="docx"],
 .file-icon[data-icon="doc"] {
   background-image: url("./icons/docx.png");
+}
+.file-icon[data-icon="pdf"] {
+  background-image: url("./icons/pdf.png");
 }
 .file-icon[data-icon="xlsx"],
 .file-icon[data-icon="xls"] {

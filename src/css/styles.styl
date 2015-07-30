@@ -5,15 +5,19 @@ body
 
 html
   font-size 16px
+  background-color #f3f0df
 
 body
   font-size 62.5%
-  font-family 'Helvetica Neue', Helvetica, sans-serif
+  font-family Helvetica, sans-serif
 
 header 
   width 100%
   text-align center
   padding 10px 0
+  background-color #394D4D
+  color #9BABAB
+  text-shadow 0 0 1px #0D0D0D
 
 header h1 
   font-weight 100
@@ -40,7 +44,7 @@ header h1
   cursor pointer
 
 .file-group:hover .file-icon
-  background-color #DDD
+  background-color #C7C2A6
 
 .file-icon
   width 100%
@@ -52,6 +56,8 @@ header h1
   &[data-icon="docx"],
   &[data-icon="doc"]
     background-image url('./icons/docx.png')
+  &[data-icon="pdf"]
+    background-image url('./icons/pdf.png')
   &[data-icon="xlsx"],
   &[data-icon="xls"]
     background-image url('./icons/xlsx.png')
