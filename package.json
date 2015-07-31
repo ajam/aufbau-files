@@ -19,5 +19,16 @@
     "gulp-stylus": "^2.0.5",
     "indian-ocean": "^0.4.0",
     "nib": "^1.1.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajam/aufbau-files.git"
+  },
+  "keywords": [
+    "aufbau"
+  ],
+  "bugs": {
+    "url": "https://github.com/ajam/aufbau-files/issues"
+  },
+  "homepage": "https://github.com/ajam/aufbau-files#readme"
 }

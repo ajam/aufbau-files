@@ -1,7 +1,7 @@
 Aufbau files
 ============
 
-> A simple [Aufbau](http://github.com/mhkeller/aufbau) app for downloading files.
+> A simple [Aufbau](http://github.com/ajam/aufbau) app for downloading files.
 
 ## Setup
 
@@ -17,7 +17,7 @@ Then the following to your `apps.json`. If you've changed the name of the repo, 
 {
 	"displayName": "Files",
 	"package": {
-      "aufbau-files": "mhkeller/aufbau-files"
+      "aufbau-files": "ajam/aufbau-files"
     },
 	"indexPath": "src/index.html",
 	"buildCmd": "npm run build"
