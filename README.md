@@ -13,10 +13,10 @@ Add the following to your `apps.json`. You can also add a commit sha preceeded b
 
 ````json
 {
-	"displayName": "Files",
 	"package": {
       "aufbau-files": "ajam/aufbau-files"
     },
+	"displayName": "Files",
 	"indexPath": "src/index.html",
 	"buildCmd": "npm run build"
 }
