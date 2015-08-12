@@ -8,13 +8,7 @@ var files_dir = path.join(module_root, 'files')
 
 var files = fs.readdirSync(files_dir)
 
-console.log(files)
-
 bakeFiles(files)
-
-function extractExt (fileName) {
-  return io.discernFormat(fileName)
-}
 
 function bakeFiles (appsList) {
   var file_group = d3.select('#main').selectAll('.file-group').data(appsList).enter()
@@ -30,7 +24,7 @@ function bakeFiles (appsList) {
   file_group.append('div')
     .classed('file-icon', true)
     .attr('data-icon', function(d){
-      return extractExt(d)
+      return io.discernFormat(d)
     })
 
   file_group.append('div')
