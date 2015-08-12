@@ -53,14 +53,30 @@ header h1
   background-repeat no-repeat
   border-radius 8px
   background-image url('./icons/default.png')
-  &[data-icon="docx"],
-  &[data-icon="doc"]
+  &:after
+    position absolute
+    top 0
+    content attr(aria-label )
+    font-size 1.8em
+    color rgba(85, 85, 85, .85)
+    text-align center
+    text-transform uppercase
+    transform translate(-50%, 119px)
+  &[aria-label="docx"],
+  &[aria-label="doc"]
     background-image url('./icons/docx.png')
-  &[data-icon="pdf"]
+  &[aria-label="pdf"]
     background-image url('./icons/pdf.png')
-  &[data-icon="xlsx"],
-  &[data-icon="xls"]
+  &[aria-label="xlsx"],
+  &[aria-label="xls"]
     background-image url('./icons/xlsx.png')
+  &[aria-label="docx"],
+  &[aria-label="doc"],
+  &[aria-label="pdf"],
+  &[aria-label="xlsx"],
+  &[aria-label="xls"]
+    &:after
+      content ''
 
 .file-name
   position absolute

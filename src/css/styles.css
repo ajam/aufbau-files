@@ -54,16 +54,33 @@ header h1 {
   border-radius: 8px;
   background-image: url("./icons/default.png");
 }
-.file-icon[data-icon="docx"],
-.file-icon[data-icon="doc"] {
+.file-icon:after {
+  position: absolute;
+  top: 0;
+  content: attr(aria-label);
+  font-size: 1.8em;
+  color: rgba(85,85,85,0.85);
+  text-align: center;
+  text-transform: uppercase;
+  transform: translate(-50%, 119px);
+}
+.file-icon[aria-label="docx"],
+.file-icon[aria-label="doc"] {
   background-image: url("./icons/docx.png");
 }
-.file-icon[data-icon="pdf"] {
+.file-icon[aria-label="pdf"] {
   background-image: url("./icons/pdf.png");
 }
-.file-icon[data-icon="xlsx"],
-.file-icon[data-icon="xls"] {
+.file-icon[aria-label="xlsx"],
+.file-icon[aria-label="xls"] {
   background-image: url("./icons/xlsx.png");
+}
+.file-icon[aria-label="docx"]:after,
+.file-icon[aria-label="doc"]:after,
+.file-icon[aria-label="pdf"]:after,
+.file-icon[aria-label="xlsx"]:after,
+.file-icon[aria-label="xls"]:after {
+  content: '';
 }
 .file-name {
   position: absolute;

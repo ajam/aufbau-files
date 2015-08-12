@@ -23,7 +23,7 @@ function bakeFiles (appsList) {
 
   file_group.append('div')
     .classed('file-icon', true)
-    .attr('data-icon', function(d){
+    .attr('aria-label', function(d){
       return io.discernFormat(d)
     })
 
