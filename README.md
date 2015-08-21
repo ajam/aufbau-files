@@ -9,14 +9,16 @@ Fork this repository and add your own files to the `files/` folder.
 
 ## Including in your Aufbau app
 
-Add the following to your `apps.json`. You can also add a commit sha preceeded by a `#` if you want to keep it versioned. See the [npm documentation](https://docs.npmjs.com/files/package.json#git-urls-as-dependencies) for more about that.
+Generally, you wouldn't publish this repository to npm so you include it your Aufbau `package.json` with `<github-username>/<repo-name>`. You can also add a commit sha preceeded by a `#` if you want to keep it versioned.
+
+Then the following to your `apps.json`. If you've changed the name of the repo, make sure `packageName` corresponds to the new name
 
 ````json
 {
+	"displayName": "Files",
 	"package": {
       "aufbau-files": "ajam/aufbau-files"
     },
-	"displayName": "Files",
 	"indexPath": "src/index.html",
 	"buildCmd": "npm run build"
 }
