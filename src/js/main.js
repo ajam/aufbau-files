@@ -9,7 +9,7 @@ var streamifier = require('streamifier')
 
 var mime = require('mime');
 
-var secrets = io.readDataSync(module_root + 'secrets.json')
+var secrets = io.readDataSync(path.join(module_root, 'secrets.json'))
 
 // create an SMB2 instance
 var smb2Client = new SMB2({
@@ -114,34 +114,23 @@ function bakeFiles (locName, files) {
         if (err) {
           throw err
         }
-        
-        var out_file = path.resolve(module_root,'tmp', d.name)
-        var tmp_file = io.fs.createWriteStream(out_file);
+
+        var file_path = path.join(module_root, 'tmp', d.name)
+        var file = io.fs.createWriteStream(file_path);
 
         // Turn our buffer into a strea
         // And write it to our tmp directory
         streamifier
           .createReadStream(data)
-          .pipe(tmp_file);
+          .pipe(file)
+          .on('finish',function(){
+            // Set the href location to that tmp file
+            // And click to download
+            d3_this.attr('href', file_path)
+            self.click()
 
-        // console.log(data.pipe())
-        
+          })
 
-
-
-        // write_stream.on("finish",function(){
-        //   // it's done writing the file
-        //   console.log(chalk.green('Saved file 👍 '));
-        //   // cb(null, null);
-        // });
-
-        // var blob = new Blob([ data ], { type: 'type' })
-        // var href = createObjectURL(blob)
-        // console.log(data)
-        // console.log(blob)
-        // console.log(href)
-        // d3_this.attr('href', href)
-        // self.click()
       });
     }
   })
