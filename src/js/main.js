@@ -14,23 +14,33 @@ var mime = require('mime');
 
 var secrets = io.readDataSync(path.join(module_root, 'secrets.json'))
 
-// create an SMB2 instance
-var smb2Client = new SMB2({
-  share: secrets.share,
-  domain: secrets.domain,
-  username: secrets.username,
-  password: secrets.password,
-  debug: false
-});
+
+function connectToShare(){
+  // create an SMB2 instance
+  var smb2Client = new SMB2({
+    share: secrets.share,
+    domain: secrets.domain,
+    username: secrets.username,
+    password: secrets.password,
+    debug: false
+  });
+
+  return smb2Client
+  
+}
 
 function clearTmpDir(){
-  var tmp_files = io.fs.readdir(tmp_dir, function(err, files){
+  var tmp_files = io.readdirExclude(tmp_dir, '.gitignore', function(err, files){
+
     files.forEach(function(file){
-      io.fs.unlink(path.join(tmp_dir, file), function(err, b){
-        if (err) {
-          throw err
-        }
-      })
+      console.log(file)
+      if (file != '.gitignore') {
+        io.fs.unlink(path.join(tmp_dir, file), function(err, b){
+          if (err) {
+            throw err
+          }
+        })
+      }
     })
   })
 }
@@ -57,6 +67,7 @@ var file_locations = [
     name: 'Network Share - 1',
     getFiles: function(cb){
       var files_dir = 'digital-interactives\\mhk'
+      var smb2Client = connectToShare()
       smb2Client.readdir(files_dir, function(err, files){
         if(err) throw err
         var files_data = files.map(function(fileName){
@@ -66,6 +77,8 @@ var file_locations = [
             fetch: true
           }
         })
+
+        smb2Client.close()
         cb(files_data)
       });
     }
@@ -128,6 +141,8 @@ function bakeFiles (locName, files) {
       d3.event.preventDefault()
       var file_path = [d.dir, d.name].join('\\\\')
       var type = mime.lookup(d.name)
+
+      var smb2Client = connectToShare()
       smb2Client.readFile(file_path, function(err, data){
         if (err) {
           throw err
@@ -146,6 +161,7 @@ function bakeFiles (locName, files) {
             // And click to download
             d3_this.attr('href', file_path)
             self.click()
+            smb2Client.close()
 
           })
 

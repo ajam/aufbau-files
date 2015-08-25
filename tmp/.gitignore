@@ -1,0 +1,7 @@
+# Ignore everything in this dir except this file
+# So that our tmp files are not saved
+# But the empty folder is
+
+*
+
+!.gitignore
