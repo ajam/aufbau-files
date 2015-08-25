@@ -5,6 +5,8 @@ var d3 = require('d3')
 var SMB2 = require('smb2');
 var module_root = path.join(__dirname, '../')
 
+var streamifier = require('streamifier')
+
 var mime = require('mime');
 
 var secrets = io.readDataSync(module_root + 'secrets.json')
@@ -107,13 +109,39 @@ function bakeFiles (locName, files) {
     if (d3_this.attr('href') == '#') {
       d3.event.preventDefault()
       var file_path = [d.dir, d.name].join('\\\\')
+      var type = mime.lookup(d.name)
       smb2Client.readFile(file_path, function(err, data){
-        if (err) throw err
-        var type = mime.lookup(d.name)
-        var blob = new Blob([ data ], { type: type })
-        var href = createObjectURL(blob)
-        d3_this.attr('href', href)
-        self.click()
+        if (err) {
+          throw err
+        }
+        
+        var out_file = path.resolve(module_root,'tmp', d.name)
+        var tmp_file = io.fs.createWriteStream(out_file);
+
+        // Turn our buffer into a strea
+        // And write it to our tmp directory
+        streamifier
+          .createReadStream(data)
+          .pipe(tmp_file);
+
+        // console.log(data.pipe())
+        
+
+
+
+        // write_stream.on("finish",function(){
+        //   // it's done writing the file
+        //   console.log(chalk.green('Saved file 👍 '));
+        //   // cb(null, null);
+        // });
+
+        // var blob = new Blob([ data ], { type: 'type' })
+        // var href = createObjectURL(blob)
+        // console.log(data)
+        // console.log(blob)
+        // console.log(href)
+        // d3_this.attr('href', href)
+        // self.click()
       });
     }
   })
