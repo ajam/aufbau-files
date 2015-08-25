@@ -2,8 +2,11 @@ var fs = require('fs')
 var path = require('path')
 var io = require('indian-ocean')
 var d3 = require('d3')
-var SMB2 = require('smb2');
+var SMB2 = require('smb2')
+var _ = require('underscore')
+
 var module_root = path.join(__dirname, '../')
+var tmp_dir = path.join(module_root, 'tmp')
 
 var streamifier = require('streamifier')
 
@@ -20,12 +23,27 @@ var smb2Client = new SMB2({
   debug: false
 });
 
-var createObjectURL = window.URL.createObjectURL; 
+function clearTmpDir(){
+  var tmp_files = io.fs.readdir(tmp_dir, function(err, files){
+    files.forEach(function(file){
+      io.fs.unlink(path.join(tmp_dir, file), function(err, b){
+        if (err) {
+          throw err
+        }
+      })
+    })
+  })
+}
+
+var clearTmpDir_once = _.once(clearTmpDir)
 
 var file_locations = [
   {
     name: 'Admin files',
     getFiles: function(cb){
+      // Also on init, clear the tmp directory
+      clearTmpDir_once()
+
       var files_dir = path.join(module_root, 'files')
       var files = fs.readdirSync(files_dir).map(function(fileName){
         return {
@@ -115,7 +133,7 @@ function bakeFiles (locName, files) {
           throw err
         }
 
-        var file_path = path.join(module_root, 'tmp', d.name)
+        var file_path = path.join(tmp_dir, d.name)
         var file = io.fs.createWriteStream(file_path);
 
         // Turn our buffer into a strea
