@@ -29,7 +29,7 @@ header h1
   padding 15px 25px 25px 25px
   text-align center
   width 75%
-  margin 0 auto
+  margin 0 auto 10px auto
   overflow auto
   
 .location-group:last-child
@@ -103,4 +103,34 @@ header h1
   opacity .5
   &:hover
     cursor default
+
+.hidden
+  display none
   
+#add-bucket
+  position fixed
+  left 0
+  right 0
+  bottom 0px
+  background-color #D5CEA7
+  height 18px
+  padding 13px
+  font-size 1.4em
+  text-align center
+  border-top 1px solid #ADA790
+  opacity .9
+  input[type="submit"]
+    font-size 1.2em
+    transform translateY(-1px)
+    width 75px  
+  
+.section-title
+  display inline-block
+  margin-right 10px
+  font-style italic
+  
+.bucket-input
+  font-size 1em
+  width 125px
+  &[name="dir"]
+    width 175px

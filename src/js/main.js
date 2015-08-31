@@ -4,16 +4,22 @@ var io = require('indian-ocean')
 var d3 = require('d3')
 var SMB2 = require('smb2')
 var _ = require('underscore')
+var $ = require('jquery')
+var queue = require('queue-async')
 
-var module_root = path.join(__dirname, '../')
-var tmp_dir = path.join(module_root, 'tmp')
+var files_module_root = path.join(__dirname, '../')
+// TODO, change this to `Application Support`
+var buckets_info_path = path.join(__dirname, 'js', 'buckets.json')
+
+var buckets = io.readDataSync(buckets_info_path)
+var tmp_dir = path.join(files_module_root, 'tmp')
 
 // For writing out files from smb
 var streamifier = require('streamifier')
 var mime = require('mime');
 
 // smb connection details
-var secrets = io.readDataSync(path.join(module_root, 'secrets.json'))
+var secrets = io.readDataSync(path.join(files_module_root, 'secrets.json'))
 
 function connectToShare(){
   // create an SMB2 instance
@@ -47,15 +53,10 @@ function clearTmpDir(){
 // Only clear once, on connection
 var clearTmpDir_once = _.once(clearTmpDir)
 
-// What buckets we want to display
-var file_locations = [
-  {
-    name: 'Admin files',
-    getFiles: function(cb){
-      // Also on init, clear the tmp directory
-      clearTmpDir_once()
-
-      var files_dir = path.join(module_root, 'files')
+var location_types = {
+  local: {
+    getFiles: function(dir, cb){
+      var files_dir = path.join(files_module_root, dir)
       var files = fs.readdirSync(files_dir).map(function(fileName){
         return {
           name: fileName,
@@ -64,10 +65,10 @@ var file_locations = [
       })
       cb(files)
     }
-  },{
-    name: 'Network Share - 1',
-    getFiles: function(cb){
-      var files_dir = 'digital-interactives\\mhk'
+  },
+  smb: {
+    getFiles: function(dir, cb){
+      var files_dir = dir
       var smb2Client = connectToShare()
       smb2Client.readdir(files_dir, function(err, files){
         if(err) throw err
@@ -84,15 +85,67 @@ var file_locations = [
       });
     }
   }
-]
+}
+
+// Put these in a queue so we add them in the same order every time
+var q = queue(1)
 
 // Bake files in each location according to its `getFiles` fn
-file_locations.forEach(function(locationInfo){
-  var loc_name = locationInfo.name
-  locationInfo.getFiles(function(result){
-    bakeFiles(loc_name, result)
+buckets.forEach(function(bucketInfo){
+  q.defer(bakeBucket, bucketInfo)
+})
+
+q.awaitAll(function(err, results){
+  results.forEach(function(resultInfo){
+    bakeFiles(resultInfo.locName, resultInfo.result)
   })
 })
+
+var d3_add_bucket_form = d3.select('form#add-bucket')
+
+d3_add_bucket_form.on('submit', addBucket)
+
+function bakeBucket(bucketInfo, cb){
+  var loc_name = bucketInfo.name
+  location_types[bucketInfo.type].getFiles(bucketInfo.dir, function(result){
+    // bakeFiles(loc_name, result)
+    cb(null, {locName: loc_name, result: result})
+  })
+}
+
+function getNewBucketInfo(){
+  var bucket = {}
+  d3.event.preventDefault()
+  var arr = $(d3_add_bucket_form.node()).serializeArray()
+  arr.forEach(function(field){
+    bucket[field.name] = field.value
+  })
+
+  return bucket
+
+}
+
+function addBucket(){
+  var bucket_info = getNewBucketInfo()
+  bakeBucket(bucket_info)
+  buckets.push(bucket_info)
+  saveBucketList()
+  clearBucketForm()
+}
+
+function clearBucketForm(){
+  d3_add_bucket_form.selectAll('.bucket-input').each(function(){
+    $(this).val('')
+  })
+}
+
+function saveBucketList(){
+  io.writeData(buckets_info_path, buckets, function(err){
+    if (err) {
+      console.log(err)
+    }
+  })
+}
 
 function bakeFiles (locName, files) {
   var location_group = d3.select('#main').append('div')
