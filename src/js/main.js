@@ -111,7 +111,7 @@ function bakeBucket(bucketInfo, idx, cb){
   var loc_name = bucketInfo.name
   location_types[bucketInfo.type].getFiles(bucketInfo.dir, function(result){
     // bakeFiles(loc_name, result)
-    cb(null, {locName: loc_name, result: result, index: idx})
+    cb(null, {locName: loc_name, result: result, index: idx, permanent: bucketInfo.permanent})
   })
 }
 
@@ -170,6 +170,9 @@ function removeBucketElAtIndex(idx){
 function bakeFiles (buckets) {
   var location_group = d3.select('#main').selectAll('.location-group').data(buckets).enter()
     .append('div')
+      .attr('class', function(d){
+        return (d.permanent) ? 'permanent' : '' 
+      })
       .classed('location-group', true)
 
   var bucket_title = location_group.append('div')

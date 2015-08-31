@@ -1,1 +1,13 @@
-[{"name":"Admin files","type":"local","dir":"files"},{"name":"Network Share - 1","type":"smb","dir":"digital-interactives\\mhk"}]
+[
+  {
+    "name": "Admin files",
+    "type": "local",
+    "dir": "files",
+    "permanent": true
+  },
+  {
+    "name": "Network Share - 1",
+    "type": "smb",
+    "dir": "digital-interactives\\mhk"
+  }
+]

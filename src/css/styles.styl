@@ -42,7 +42,9 @@ header h1
     font-size 2em
     margin-bottom 8px
     color #394D4D
-    &:hover .remove-bucket
+    
+  &:not(.permanent)
+    .title:hover .remove-bucket
       visibility visible
 
 
@@ -127,6 +129,10 @@ header h1
     transform translateY(-1px)
     width 75px  
     
+.permanent
+  .remove-bucket
+    pointer-events none
+
 .remove-bucket
   visibility hidden
   opacity .7

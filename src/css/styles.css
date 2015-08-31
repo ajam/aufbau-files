@@ -45,7 +45,7 @@ header h1 {
   margin-bottom: 8px;
   color: #394d4d;
 }
-.location-group .title:hover .remove-bucket {
+.location-group:not(.permanent) .title:hover .remove-bucket {
   visibility: visible;
 }
 .file-group {
@@ -134,6 +134,9 @@ header h1 {
   font-size: 1.2em;
   transform: translateY(-1px);
   width: 75px;
+}
+.permanent .remove-bucket {
+  pointer-events: none;
 }
 .remove-bucket {
   visibility: hidden;
