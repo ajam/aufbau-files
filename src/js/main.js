@@ -8,6 +8,7 @@ var $ = require('jquery')
 var queue = require('queue-async')
 
 var files_module_root = path.join(__dirname, '../')
+
 // TODO, change this to `Application Support`
 var buckets_info_path = path.join(__dirname, 'js', 'buckets.json')
 
@@ -91,25 +92,26 @@ var location_types = {
 var q = queue(1)
 
 // Bake files in each location according to its `getFiles` fn
-buckets.forEach(function(bucketInfo){
-  q.defer(bakeBucket, bucketInfo)
+buckets.forEach(function(bucketInfo, index){
+  q.defer(bakeBucket, bucketInfo, index)
 })
 
 q.awaitAll(function(err, results){
-  results.forEach(function(resultInfo){
-    bakeFiles(resultInfo.locName, resultInfo.result)
-  })
+  bakeFiles(results)
+  // results.foreach(function(resultInfo){
+  //   bakeFiles(resultInfo.locName, resultInfo.result)
+  // })
 })
 
 var d3_add_bucket_form = d3.select('form#add-bucket')
 
 d3_add_bucket_form.on('submit', addBucket)
 
-function bakeBucket(bucketInfo, cb){
+function bakeBucket(bucketInfo, idx, cb){
   var loc_name = bucketInfo.name
   location_types[bucketInfo.type].getFiles(bucketInfo.dir, function(result){
     // bakeFiles(loc_name, result)
-    cb(null, {locName: loc_name, result: result})
+    cb(null, {locName: loc_name, result: result, index: idx})
   })
 }
 
@@ -122,7 +124,6 @@ function getNewBucketInfo(){
   })
 
   return bucket
-
 }
 
 function addBucket(){
@@ -131,6 +132,14 @@ function addBucket(){
   buckets.push(bucket_info)
   saveBucketList()
   clearBucketForm()
+}
+
+function removeBucketAtIndex(idx){
+  buckets = buckets.filter(function(bucket, index){
+    return index != idx
+  })
+
+  saveBucketList()
 }
 
 function clearBucketForm(){
@@ -147,15 +156,40 @@ function saveBucketList(){
   })
 }
 
-function bakeFiles (locName, files) {
-  var location_group = d3.select('#main').append('div')
+function removeBucketElAtIndex(idx){
+  d3.select('#main').selectAll('.location-group').each(function(d, index){
+    if (index == idx) {
+      d3.select(this).remove()
+    }
+  })
+}
+
+
+
+// function bakeFiles (locName, files) {
+function bakeFiles (buckets) {
+  var location_group = d3.select('#main').selectAll('.location-group').data(buckets).enter()
+    .append('div')
       .classed('location-group', true)
 
-  location_group.append('div')
+  var bucket_title = location_group.append('div')
     .classed('title', true)
-    .html(locName)
+    .html(function(d){
+      return d.locName
+    })
+  
+  bucket_title.append('span')
+      .html(' 🚫 ')
+      .classed('remove-bucket', true)
+      .on('click', function(d){
+        var idx = d.index // Remove the bucket json based on the index in case the name is not unique
+        removeBucketAtIndex(idx)
+        removeBucketElAtIndex(idx)
+      })
 
-  var file_group = location_group.selectAll('.file-group').data(files).enter()
+  var file_group = location_group.selectAll('.file-group').data(function(d){
+    return d.result
+  }).enter()
     .append('a')
     .classed('file-group', true)
     .attr('draggable', true) // This just makes it look nicer
