@@ -8,12 +8,12 @@ var _ = require('underscore')
 var module_root = path.join(__dirname, '../')
 var tmp_dir = path.join(module_root, 'tmp')
 
+// For writing out files from smb
 var streamifier = require('streamifier')
-
 var mime = require('mime');
 
+// smb connection details
 var secrets = io.readDataSync(path.join(module_root, 'secrets.json'))
-
 
 function connectToShare(){
   // create an SMB2 instance
@@ -26,14 +26,13 @@ function connectToShare(){
   });
 
   return smb2Client
-  
 }
 
+// Remove the `tmp/` directory where we download files to
 function clearTmpDir(){
   var tmp_files = io.readdirExclude(tmp_dir, '.gitignore', function(err, files){
 
     files.forEach(function(file){
-      console.log(file)
       if (file != '.gitignore') {
         io.fs.unlink(path.join(tmp_dir, file), function(err, b){
           if (err) {
@@ -45,8 +44,10 @@ function clearTmpDir(){
   })
 }
 
+// Only clear once, on connection
 var clearTmpDir_once = _.once(clearTmpDir)
 
+// What buckets we want to display
 var file_locations = [
   {
     name: 'Admin files',
@@ -85,6 +86,7 @@ var file_locations = [
   }
 ]
 
+// Bake files in each location according to its `getFiles` fn
 file_locations.forEach(function(locationInfo){
   var loc_name = locationInfo.name
   locationInfo.getFiles(function(result){
@@ -136,9 +138,11 @@ function bakeFiles (locName, files) {
 
   d3.selectAll('.file-group[data-share="true"]').on('click', function(d){
     var self = this
-    var d3_this = d3.select(this)
-    if (d3_this.attr('href') == '#') {
+    var d3_btn = d3.select(this)
+    if (d3_btn.attr('href') == '#') {
       d3.event.preventDefault()
+      d3_btn.attr('data-share', 'downloading')
+
       var file_path = [d.dir, d.name].join('\\\\')
       var type = mime.lookup(d.name)
 
@@ -156,15 +160,14 @@ function bakeFiles (locName, files) {
         streamifier
           .createReadStream(data)
           .pipe(file)
-          .on('finish',function(){
+          .on('finish', function(){
             // Set the href location to that tmp file
             // And click to download
-            d3_this.attr('href', file_path)
+            d3_btn.attr('href', file_path)
             self.click()
             smb2Client.close()
-
+            d3_btn.attr('data-share', 'true')
           })
-
       });
     }
   })

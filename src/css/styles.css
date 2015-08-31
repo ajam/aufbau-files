@@ -104,3 +104,10 @@ header h1 {
   bottom: -2px;
   transform: translateX(-5px);
 }
+.file-group[data-share="downloading"] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.file-group[data-share="downloading"]:hover {
+  cursor: default;
+}
