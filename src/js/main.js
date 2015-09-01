@@ -7,10 +7,24 @@ var _ = require('underscore')
 var $ = require('jquery')
 var queue = require('queue-async')
 
+var ipc = require('ipc')
+
+var user_data_dir = ipc.sendSync('synchronous-message', 'userData')
+
 var files_module_root = path.join(__dirname, '../')
 
-// TODO, change this to `Application Support`
-var buckets_info_path = path.join(__dirname, 'js', 'buckets.json')
+// Set up the user data dir
+var aufbau_files_user_dir = path.join(user_data_dir, 'aufbau-files')
+var default_buckets = path.join(__dirname, '../', 'default-buckets.json')
+
+if (!io.existsSync(aufbau_files_user_dir)) {
+  io.fs.mkdirSync(aufbau_files_user_dir)
+} 
+
+var buckets_info_path = path.join(aufbau_files_user_dir, 'buckets.json')
+if (!io.existsSync(buckets_info_path)){
+  io.writeDataSync(buckets_info_path, io.readDataSync(default_buckets));
+}
 
 var buckets = io.readDataSync(buckets_info_path)
 var tmp_dir = path.join(files_module_root, 'tmp')
