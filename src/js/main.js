@@ -240,7 +240,7 @@ function bakeFiles () {
       return d.name
     })
 
-  d3.selectAll('.file-group[data-share="true"]').on('click', function(d){
+  location_group.selectAll('.file-group[data-share="true"]').on('click', function(d){
     var self = this
     var d3_btn = d3.select(this)
     if (d3_btn.attr('href') == '#') {
@@ -275,4 +275,6 @@ function bakeFiles () {
       });
     }
   })
+
+  // d3.selectAll('.location-group').on('drag')
 }
