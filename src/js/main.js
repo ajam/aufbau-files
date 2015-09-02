@@ -182,12 +182,39 @@ function removeBucketElAtIndex(idx){
 }
 
 function bakeFiles () {
-  var location_group = d3.select('#main').selectAll('.location-group').data(bucket_results).enter()
-    .append('div')
+  var _locations = d3.select('#main').selectAll('.location-group').data(bucket_results).enter()
+  
+  var location_group = _locations.append('div')
       .attr('class', function(d){
         return (d.permanent) ? 'permanent' : '' 
       })
       .classed('location-group', true)
+  //     .on('dragenter', function(){
+  //       console.log('enter', this, (Math.random()*10).toFixed(1))
+  //       d3.event.preventDefault()
+  //       d3.event.stopPropagation()
+  //       d3.select(this).attr('data-drag', 'over')
+  //     })
+  //     .on('dragleave', function(){
+  //       console.log('leave', this, (Math.random()*10).toFixed(1))
+  //       d3.event.preventDefault()
+  //       d3.event.stopPropagation()
+  //       d3.select(this).attr('data-drag', 'leave')
+  //     })
+  //     .on('drop', function(){
+  //       d3.event.preventDefault()
+  //       d3.event.stopPropagation()
+  //       d3.select(this).attr('data-drag', '')
+  //       alert('hey')
+  //     })
+
+  // location_group.append('div')
+  //   .classed('drag-hover', true)
+  //   .html('Drop file')
+  //   .on('dragleave', function(){
+  //     d3.event.preventDefault()
+  //     d3.event.stopPropagation()
+  //   })
 
   var bucket_title = location_group.append('div')
     .classed('title', true)
@@ -226,6 +253,10 @@ function bakeFiles () {
     .attr('download', function(d){
       return d.name
     })
+    // .on('dragleave', function(){
+    //   d3.event.preventDefault()
+    //   d3.event.stopPropagation()
+    // })
 
 
   file_group.append('div')
@@ -276,5 +307,24 @@ function bakeFiles () {
     }
   })
 
-  // d3.selectAll('.location-group').on('drag')
+  // For every location group in our selection, add listeners
+  // location_group.each(function(){
+  //   this.addEventListener('dragenter', function(e){
+  //     e.stopPropagation()
+  //     e.preventDefault()
+  //     d3.select(this).attr('data-drag', 'over')
+  //   })
+
+  //   this.addEventListener('dragleave', function(e){
+  //     e.stopPropagation()
+  //     e.preventDefault()
+  //     d3.select(this).attr('data-drag', 'leave')
+  //   })
+  // })
+
+  // location_group.node().addEventListener('dragleave', function(e){
+  //   e.stopPropagation()
+  //   e.preventDefault()
+  //   d3.select(this).attr('data-drag', 'exit')
+  // })
 }

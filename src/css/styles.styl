@@ -35,6 +35,7 @@ header h1
 .location-group:last-child
   border-bottom-width 0
 .location-group
+  position relative
   margin-bottom 25px
   padding-bottom 25px
   border-bottom 3px solid #ccc
@@ -152,3 +153,26 @@ header h1
   width 125px
   &[name="dir"]
     width 175px
+    
+.drag-hover
+  display none
+  position absolute
+  top 32px
+  left 50%
+  transform translate(-50%)
+  padding-top 25px
+  border 3px dashed #ccc
+  width 100%
+  height 75%
+  font-size 2.6em
+  font-weight bold
+  pointer-events none
+  z-index -10
+
+
+.location-group[data-drag="over"]
+  .drag-hover
+    display block
+  .file-group
+    opacity .3
+    pointer-events none
