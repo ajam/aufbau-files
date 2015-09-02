@@ -152,7 +152,10 @@ function addBucket(){
 }
 
 function removeBucketAtIndex(idx){
-  buckets = buckets.filter(function(bucket, index){
+  buckets = buckets.filter(function(bkt, index){
+    return index != idx
+  })
+  bucket_results = bucket_results.filter(function(bkt, index){
     return index != idx
   })
 
@@ -204,7 +207,6 @@ function bakeFiles () {
         if (d.bucketInfo.permanent) {
           classes.push('permanent')
         }
-        console.log(d)
         if (d.result[0].fetch) {
           classes.push('fetch')
         }
