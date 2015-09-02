@@ -48,6 +48,9 @@ header h1
     .title:hover .remove-bucket
       visibility visible
 
+  &.fetch
+    .add-file
+      visibility visible
 
 .file-group
   position relative
@@ -134,14 +137,35 @@ header h1
   .remove-bucket
     pointer-events none
 
-.remove-bucket
+.location-option
   visibility hidden
-  opacity .7
   display inline-block
-  transform translate(10px, 2px)
   &:hover
-    cursor pointer
+    cursor default
     opacity 1
+    
+.remove-bucket
+  opacity .3
+  transform translate(35px, 2px)
+  
+.add-file
+  position absolute
+  display inline-block
+  vertical-align bottom
+  visibility hidden
+  top 5px
+  left 50%
+  transform translate(58%, -3px)
+  opacity .3
+  width 25px
+  white-space nowrap
+  overflow hidden
+  &:hover
+    opacity 1
+    cursor pointer
+  input
+    opacity 0
+    transform translate(-25px)
   
 .section-title
   display inline-block

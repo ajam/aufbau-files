@@ -125,7 +125,7 @@ d3_add_bucket_form.on('submit', addBucket)
 function bakeBucket(bucketInfo, idx, cb){
   var loc_name = bucketInfo.name
   location_types[bucketInfo.type].getFiles(bucketInfo.dir, function(result){
-    cb(null, {locName: loc_name, result: result, index: idx, permanent: bucketInfo.permanent})
+    cb(null, {result: result, index: idx, bucketInfo: bucketInfo})
   })
 }
 
@@ -181,12 +181,34 @@ function removeBucketElAtIndex(idx){
   })
 }
 
+function getUploadAndTransfer(filesList, bucketInfo){
+  var smb2Client = connectToShare()
+  var path_delimiter = '\\\\'
+  for (var i = 0; i < filesList.length; i++) {
+    var fileInfo = filesList[i]
+    var file_data = io.fs.readFileSync(fileInfo.path)
+    var remote_loc = [bucketInfo.dir, fileInfo.name].join(path_delimiter)
+    smb2Client.writeFile(remote_loc, file_data, function (err) {
+      if (err) throw err;
+      console.log('It\'s saved!');
+    });
+  }
+}
+
 function bakeFiles () {
   var _locations = d3.select('#main').selectAll('.location-group').data(bucket_results).enter()
   
   var location_group = _locations.append('div')
       .attr('class', function(d){
-        return (d.permanent) ? 'permanent' : '' 
+        var classes = []
+        if (d.bucketInfo.permanent) {
+          classes.push('permanent')
+        }
+        console.log(d)
+        if (d.result[0].fetch) {
+          classes.push('fetch')
+        }
+        return classes.join(' ')
       })
       .classed('location-group', true)
   //     .on('dragenter', function(){
@@ -219,16 +241,28 @@ function bakeFiles () {
   var bucket_title = location_group.append('div')
     .classed('title', true)
     .html(function(d){
-      return d.locName
+      return d.bucketInfo.name
     })
   
   bucket_title.append('span')
-      .html(' 🚫 ')
-      .classed('remove-bucket', true)
-      .on('click', function(d){
-        var idx = d.index // Remove the bucket json based on the index in case the name is not unique
-        removeBucketAtIndex(idx)
-        removeBucketElAtIndex(idx)
+    .html(' 🚫 ')
+    .classed('remove-bucket', true)
+    .classed('location-option', true)
+    .on('click', function(d){
+      var idx = d.index // Remove the bucket json based on the index in case the name is not unique
+      removeBucketAtIndex(idx)
+      removeBucketElAtIndex(idx)
+    })
+
+  bucket_title.append('div')
+    .classed('add-file', true)
+    .html('<span class="icon">➕</span>')
+    // .classed('location-option', true)
+    .append('input')
+      .attr('type', 'file')
+      .attr('multiple', 'true')
+      .on('change', function(d){
+        getUploadAndTransfer(this.files, d.bucketInfo)
       })
 
   var file_group = location_group.selectAll('.file-group').data(function(d){

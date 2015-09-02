@@ -49,6 +49,9 @@ header h1 {
 .location-group:not(.permanent) .title:hover .remove-bucket {
   visibility: visible;
 }
+.location-group.fetch .add-file {
+  visibility: visible;
+}
 .file-group {
   position: relative;
   width: 140px;
@@ -139,15 +142,38 @@ header h1 {
 .permanent .remove-bucket {
   pointer-events: none;
 }
-.remove-bucket {
+.location-option {
   visibility: hidden;
-  opacity: 0.7;
   display: inline-block;
-  transform: translate(10px, 2px);
 }
-.remove-bucket:hover {
-  cursor: pointer;
+.location-option:hover {
+  cursor: default;
   opacity: 1;
+}
+.remove-bucket {
+  opacity: 0.3;
+  transform: translate(35px, 2px);
+}
+.add-file {
+  position: absolute;
+  display: inline-block;
+  vertical-align: bottom;
+  visibility: hidden;
+  top: 5px;
+  left: 50%;
+  transform: translate(58%, -3px);
+  opacity: 0.3;
+  width: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.add-file:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+.add-file input {
+  opacity: 0;
+  transform: translate(-25px);
 }
 .section-title {
   display: inline-block;
