@@ -54,7 +54,6 @@ function connectToShare(){
 // Remove the `tmp/` directory where we download files to
 function clearTmpDir(){
   var tmp_files = io.readdirExclude(tmp_dir, '.gitignore', function(err, files){
-
     files.forEach(function(file){
       if (file != '.gitignore') {
         io.fs.unlink(path.join(tmp_dir, file), function(err, b){
@@ -67,8 +66,9 @@ function clearTmpDir(){
   })
 }
 
-// Only clear once, on connection
-var clearTmpDir_once = _.once(clearTmpDir)
+// var clearTmpDir_once = _.once(clearTmpDir)
+// Clear tmp dir on load
+clearTmpDir()
 
 // Templates for location types
 var location_types = {
@@ -184,23 +184,32 @@ function removeBucketElAtIndex(idx){
   })
 }
 
-function getUploadAndTransfer(filesList, bucketInfo){
+function getUploadAndTransfer(filesList, d){
   var smb2Client = connectToShare()
   var path_delimiter = '\\\\'
   for (var i = 0; i < filesList.length; i++) {
     var fileInfo = filesList[i]
     var file_data = io.fs.readFileSync(fileInfo.path)
-    var remote_loc = [bucketInfo.dir, fileInfo.name].join(path_delimiter)
+    var remote_loc = [d.bucketInfo.dir, fileInfo.name].join(path_delimiter)
     smb2Client.writeFile(remote_loc, file_data, function (err) {
       if (err) throw err;
-      console.log('It\'s saved!');
+      var file_obj = {
+        dir: d.bucketInfo.dir,
+        fetch: true,
+        name: fileInfo.name
+      }
+      d.result.push(file_obj)
+      bakeFiles()
     });
   }
 }
 
+
 function bakeFiles () {
-  var _locations = d3.select('#main').selectAll('.location-group').data(bucket_results).enter()
-  
+  var locations = d3.select('#main').selectAll('.location-group').data(bucket_results)
+
+  _locations = locations.enter()
+
   var location_group = _locations.append('div')
       .attr('class', function(d){
         var classes = []
@@ -247,7 +256,7 @@ function bakeFiles () {
     })
   
   bucket_title.append('span')
-    .html(' 🚫 ')
+    .html(' 🚫')
     .classed('remove-bucket', true)
     .classed('location-option', true)
     .on('click', function(d){
@@ -264,15 +273,16 @@ function bakeFiles () {
       .attr('type', 'file')
       .attr('multiple', 'true')
       .on('change', function(d){
-        getUploadAndTransfer(this.files, d.bucketInfo)
+        getUploadAndTransfer(this.files, d)
       })
 
-  var file_group = location_group.selectAll('.file-group').data(function(d){
+  var file_group = locations.selectAll('.file-group').data(function(d){
     return d.result
+  }, function(d){
+    return d.name
   }).enter()
     .append('a')
     .classed('file-group', true)
-    .attr('draggable', true) // This just makes it look nicer
     .each(function(d){
       var d3_this = d3.select(this)
       // If we don't need to fetch, just make it an href
@@ -307,7 +317,7 @@ function bakeFiles () {
       return d.name
     })
 
-  location_group.selectAll('.file-group[data-share="true"]').on('click', function(d){
+  locations.selectAll('.file-group[data-share="true"]').on('click', function(d){
     var self = this
     var d3_btn = d3.select(this)
     if (d3_btn.attr('href') == '#') {
@@ -326,7 +336,7 @@ function bakeFiles () {
         var file_path = path.join(tmp_dir, d.name)
         var file = io.fs.createWriteStream(file_path);
 
-        // Turn our buffer into a strea
+        // Turn our buffer into a stream
         // And write it to our tmp directory
         streamifier
           .createReadStream(data)
