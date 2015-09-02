@@ -68,6 +68,7 @@ function clearTmpDir(){
 // Only clear once, on connection
 var clearTmpDir_once = _.once(clearTmpDir)
 
+// Templates for location types
 var location_types = {
   local: {
     getFiles: function(dir, cb){
@@ -112,13 +113,10 @@ buckets.forEach(function(bucketInfo, index){
 
 q.awaitAll(function(err, results){
   bakeFiles(results)
-  // results.foreach(function(resultInfo){
-  //   bakeFiles(resultInfo.locName, resultInfo.result)
-  // })
 })
 
+// Listen for submission
 var d3_add_bucket_form = d3.select('form#add-bucket')
-
 d3_add_bucket_form.on('submit', addBucket)
 
 function bakeBucket(bucketInfo, idx, cb){
@@ -178,9 +176,6 @@ function removeBucketElAtIndex(idx){
   })
 }
 
-
-
-// function bakeFiles (locName, files) {
 function bakeFiles (buckets) {
   var location_group = d3.select('#main').selectAll('.location-group').data(buckets).enter()
     .append('div')
