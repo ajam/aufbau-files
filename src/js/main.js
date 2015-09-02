@@ -27,6 +27,8 @@ if (!io.existsSync(buckets_info_path)){
 }
 
 var buckets = io.readDataSync(buckets_info_path)
+// This will store our retrieved file list
+var bucket_results
 var tmp_dir = path.join(files_module_root, 'tmp')
 
 // For writing out files from smb
@@ -112,7 +114,8 @@ buckets.forEach(function(bucketInfo, index){
 })
 
 q.awaitAll(function(err, results){
-  bakeFiles(results)
+  bucket_results = results
+  bakeFiles()
 })
 
 // Listen for submission
@@ -122,7 +125,6 @@ d3_add_bucket_form.on('submit', addBucket)
 function bakeBucket(bucketInfo, idx, cb){
   var loc_name = bucketInfo.name
   location_types[bucketInfo.type].getFiles(bucketInfo.dir, function(result){
-    // bakeFiles(loc_name, result)
     cb(null, {locName: loc_name, result: result, index: idx, permanent: bucketInfo.permanent})
   })
 }
@@ -134,16 +136,19 @@ function getNewBucketInfo(){
   arr.forEach(function(field){
     bucket[field.name] = field.value
   })
-
   return bucket
 }
 
 function addBucket(){
   var bucket_info = getNewBucketInfo()
-  bakeBucket(bucket_info)
-  buckets.push(bucket_info)
-  saveBucketList()
-  clearBucketForm()
+  bakeBucket(bucket_info, buckets.length, function(err, bucketResult) {
+    bucket_results.push(bucketResult)
+    bakeFiles()
+
+    buckets.push(bucket_info)
+    saveBucketList()
+    clearBucketForm()
+  })
 }
 
 function removeBucketAtIndex(idx){
@@ -176,8 +181,8 @@ function removeBucketElAtIndex(idx){
   })
 }
 
-function bakeFiles (buckets) {
-  var location_group = d3.select('#main').selectAll('.location-group').data(buckets).enter()
+function bakeFiles () {
+  var location_group = d3.select('#main').selectAll('.location-group').data(bucket_results).enter()
     .append('div')
       .attr('class', function(d){
         return (d.permanent) ? 'permanent' : '' 
