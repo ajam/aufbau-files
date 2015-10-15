@@ -35,10 +35,10 @@ var tmp_dir = path.join(files_module_root, 'tmp')
 var streamifier = require('streamifier')
 var mime = require('mime');
 
-// smb connection details
-var secrets = io.readDataSync(path.join(aufbau_root, 'aufbau-files-secrets.json'))
-
 function connectToShare(){
+  // smb connection details
+  var secrets = io.readDataSync(path.join(aufbau_root, 'aufbau-files-secrets.json'))
+  
   // create an SMB2 instance
   var smb2Client = new SMB2({
     share: secrets.share,
