@@ -10,7 +10,7 @@ var queue = require('queue-async')
 var ipc = require('ipc')
 
 var user_data_dir = ipc.sendSync('synchronous-message', 'userData')
-
+var aufbau_root = path.resolve('./')
 var files_module_root = path.join(__dirname, '../')
 
 // Set up the user data dir
@@ -36,7 +36,7 @@ var streamifier = require('streamifier')
 var mime = require('mime');
 
 // smb connection details
-var secrets = io.readDataSync(path.join(files_module_root, 'secrets.json'))
+var secrets = io.readDataSync(path.join(aufbau_root, 'aufbau-files-secrets.json'))
 
 function connectToShare(){
   // create an SMB2 instance
