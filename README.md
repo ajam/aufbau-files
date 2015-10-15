@@ -1,11 +1,11 @@
 Aufbau files
 ============
 
-> A simple [Aufbau](http://github.com/ajam/aufbau) app for downloading files.
+> An [Aufbau](http://github.com/ajam/aufbau) app for downloading files and accessing them via a network share, if so desired.
 
 ## Setup
 
-Fork this repository and add your own files to the `files/` folder. 
+Fork this repository and add your own files to the `files/` folder. Copy `aufbau-files-secrets.sample.json` to your root aufbau app and rename to `aufbau-files-secrets.json`.
 
 ## Including in your Aufbau app
 
