@@ -7,7 +7,7 @@ Aufbau files
 
 Fork this repository and add your own files to the `files/` folder. Copy `aufbau-files-secrets.sample.json` to your root aufbau app and rename to `aufbau-files-secrets.json`.
 
-Define your file locations in the `buckets.json` file. It can be a local folder in this repo or if you define `type` to `'local'` or on an smb network share like below. Setting `permanent` to `true` will mean users can't delete that bucket.
+Define your file locations in the `default-buckets.json` file. It can be a local folder in this repo or if you define `type` to `'local'` or on an smb network share like below. Setting `permanent` to `true` will mean users can't delete that bucket. Users can add and remove all other buckets from within the interface and their changes will be saved to their user directory, usually under `Application Support` if they're on OS X.
 
 ```json
 [
