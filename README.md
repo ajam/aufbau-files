@@ -9,7 +9,7 @@ Fork this repository and add your own files to the `files/` folder. Copy `aufbau
 
 Define your file locations in the `buckets.json` file. It can be a local folder in this repo or if you define `type` to `'local'` or on an smb network share like below. Setting `permanent` to `true` will mean users can't delete that bucket.
 
-```
+```json
 [
   {
     "name": "Admin files",
